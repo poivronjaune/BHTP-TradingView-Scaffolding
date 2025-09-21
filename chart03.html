@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0"
     />
-    <title>Candlestick Chart</title>
+    <title>Multiple Data Chart</title>
 
     <!-- Adding the standalone version of Lightweight charts -->
     <script
@@ -34,7 +34,7 @@
     <!-- JAVASCRIPT TO DEFINE DATA AND ADD THE CHART  -->
     <!-- ###########################################  -->
     <script type="text/javascript">
-      // Function to generate a sample set of Candlestick datapoints
+      // Functions to generate sample datasets: Candlestick & movimg average datapoints
       function generateCandlestickData() {
           return [
             { time: "2018-10-19", open: 180.34, high: 180.99, low: 178.57, close: 179.85 },
@@ -184,19 +184,173 @@
           ];
       }
  
+      function generateSMA3Data() {
+          return [
+            { time: "2018-10-23", value: 179.04, color: 'black' },
+            { time: "2018-10-24", value: 178.71, color: 'black' },
+            { time: "2018-10-25", value: 178.19, color: 'black' },
+            { time: "2018-10-26", value: 176.09, color: 'black' },
+            { time: "2018-10-29", value: 174.50, color: 'black' },
+            { time: "2018-10-30", value: 173.89, color: 'black' },
+            { time: "2018-10-31", value: 175.11, color: 'black' },
+            { time: "2018-11-01", value: 177.53, color: 'black' },
+            { time: "2018-11-02", value: 178.76, color: 'black' },
+            { time: "2018-11-05", value: 180.86, color: 'black' },
+            { time: "2018-11-06", value: 180.71, color: 'black' },
+            { time: "2018-11-07", value: 183.81, color: 'black' },
+            { time: "2018-11-08", value: 185.75, color: 'black' },
+            { time: "2018-11-09", value: 187.08, color: 'black' },
+            { time: "2018-11-12", value: 184.48, color: 'black' },
+            { time: "2018-11-13", value: 181.48, color: 'black' },
+            { time: "2018-11-14", value: 179.45, color: 'black' },
+            { time: "2018-11-15", value: 178.76, color: 'black' },
+            { time: "2018-11-16", value: 177.43, color: 'black' },
+            { time: "2018-11-19", value: 176.66, color: 'black' },
+            { time: "2018-11-20", value: 173.89, color: 'black' },
+            { time: "2018-11-21", value: 170.65, color: 'black' },
+            { time: "2018-11-23", value: 169.07, color: 'black' },
+            { time: "2018-11-26", value: 169.66, color: 'black' },
+            { time: "2018-11-27", value: 170.64, color: 'black' },
+            { time: "2018-11-28", value: 173.51, color: 'black' },
+            { time: "2018-11-29", value: 175.46, color: 'black' },
+            { time: "2018-11-30", value: 177.49, color: 'black' },
+            { time: "2018-12-03", value: 178.79, color: 'black' },
+            { time: "2018-12-04", value: 178.93, color: 'black' },
+            { time: "2018-12-06", value: 177.57, color: 'black' },
+            { time: "2018-12-07", value: 174.58, color: 'black' },
+            { time: "2018-12-10", value: 173.81, color: 'black' },
+            { time: "2018-12-11", value: 172.23, color: 'black' },
+            { time: "2018-12-12", value: 172.70, color: 'black' },
+            { time: "2018-12-13", value: 173.76, color: 'black' },
+            { time: "2018-12-14", value: 173.46, color: 'black' },
+            { time: "2018-12-17", value: 171.05, color: 'black' },
+            { time: "2018-12-18", value: 170.10, color: 'black' },
+            { time: "2018-12-19", value: 168.52, color: 'black' },
+            { time: "2018-12-20", value: 167.25, color: 'black' },
+            { time: "2018-12-21", value: 164.73, color: 'black' },
+            { time: "2018-12-24", value: 160.93, color: 'black' },
+            { time: "2018-12-26", value: 162.29, color: 'black' },
+            { time: "2018-12-27", value: 165.58, color: 'black' },
+            { time: "2018-12-28", value: 169.27, color: 'black' },
+            { time: "2018-12-31", value: 170.12, color: 'black' },
+            { time: "2019-01-02", value: 170.82, color: 'black' },
+            { time: "2019-01-03", value: 170.95, color: 'black' },
+            { time: "2019-01-04", value: 171.58, color: 'black' },
+            { time: "2019-01-07", value: 173.09, color: 'black' },
+            { time: "2019-01-08", value: 176.18, color: 'black' },
+            { time: "2019-01-09", value: 178.22, color: 'black' },
+            { time: "2019-01-10", value: 178.89, color: 'black' },
+            { time: "2019-01-11", value: 179.40, color: 'black' },
+            { time: "2019-01-14", value: 178.42, color: 'black' },
+            { time: "2019-01-15", value: 178.56, color: 'black' },
+            { time: "2019-01-16", value: 177.58, color: 'black' },
+            { time: "2019-01-17", value: 176.13, color: 'black' },
+            { time: "2019-01-18", value: 176.79, color: 'black' },
+            { time: "2019-01-22", value: 177.19, color: 'black' },
+            { time: "2019-01-23", value: 177.42, color: 'black' },
+            { time: "2019-01-24", value: 177.32, color: 'black' },
+            { time: "2019-01-25", value: 178.93, color: 'black' },
+            { time: "2019-01-28", value: 179.85, color: 'black' },
+            { time: "2019-01-29", value: 179.98, color: 'black' },
+            { time: "2019-01-30", value: 180.57, color: 'black' },
+            { time: "2019-01-31", value: 181.80, color: 'black' },
+            { time: "2019-02-01", value: 183.36, color: 'black' },
+            { time: "2019-02-04", value: 184.43, color: 'black' },
+            { time: "2019-02-05", value: 185.73, color: 'black' },
+            { time: "2019-02-06", value: 185.85, color: 'black' },
+            { time: "2019-02-07", value: 185.73, color: 'black' },
+            { time: "2019-02-08", value: 184.44, color: 'black' },
+            { time: "2019-02-11", value: 183.84, color: 'black' },
+            { time: "2019-02-12", value: 184.33, color: 'black' },
+            { time: "2019-02-13", value: 185.59, color: 'black' },
+            { time: "2019-02-14", value: 186.65, color: 'black' },
+            { time: "2019-02-15", value: 188.94, color: 'black' },
+            { time: "2019-02-19", value: 191.50, color: 'black' },
+            { time: "2019-02-20", value: 192.19, color: 'black' },
+            { time: "2019-02-21", value: 191.69, color: 'black' },
+            { time: "2019-02-22", value: 191.99, color: 'black' },
+            { time: "2019-02-25", value: 191.39, color: 'black' },
+            { time: "2019-02-26", value: 190.09, color: 'black' },
+            { time: "2019-02-27", value: 187.32, color: 'black' },
+            { time: "2019-02-28", value: 185.71, color: 'black' },
+            { time: "2019-03-01", value: 184.67, color: 'black' },
+            { time: "2019-03-04", value: 184.85, color: 'black' },
+            { time: "2019-03-05", value: 184.66, color: 'black' },
+            { time: "2019-03-06", value: 184.40, color: 'black' },
+            { time: "2019-03-07", value: 183.47, color: 'black' },
+            { time: "2019-03-08", value: 182.06, color: 'black' },
+            { time: "2019-03-11", value: 181.62, color: 'black' },
+            { time: "2019-03-12", value: 182.56, color: 'black' },
+            { time: "2019-03-13", value: 182.53, color: 'black' },
+            { time: "2019-03-14", value: 182.46, color: 'black' },
+            { time: "2019-03-15", value: 181.87, color: 'black' },
+            { time: "2019-03-18", value: 181.93, color: 'black' },
+            { time: "2019-03-19", value: 182.40, color: 'black' },
+            { time: "2019-03-20", value: 182.32, color: 'black' },
+            { time: "2019-03-21", value: 182.81, color: 'black' },
+            { time: "2019-03-22", value: 182.68, color: 'black' },
+            { time: "2019-03-25", value: 181.86, color: 'black' },
+            { time: "2019-03-26", value: 182.23, color: 'black' },
+            { time: "2019-03-27", value: 183.12, color: 'black' },
+            { time: "2019-03-28", value: 183.56, color: 'black' },
+            { time: "2019-03-29", value: 184.49, color: 'black' },
+            { time: "2019-04-01", value: 185.52, color: 'black' },
+            { time: "2019-04-02", value: 186.27, color: 'black' },
+            { time: "2019-04-03", value: 187.18, color: 'black' },
+            { time: "2019-04-04", value: 187.65, color: 'black' },
+            { time: "2019-04-05", value: 188.58, color: 'black' },
+            { time: "2019-04-08", value: 189.80, color: 'black' },
+            { time: "2019-04-09", value: 189.76, color: 'black' },
+            { time: "2019-04-10", value: 189.87, color: 'black' },
+            { time: "2019-04-11", value: 189.34, color: 'black' },
+            { time: "2019-04-12", value: 190.17, color: 'black' },
+            { time: "2019-04-15", value: 190.36, color: 'black' },
+            { time: "2019-04-16", value: 191.04, color: 'black' },
+            { time: "2019-04-17", value: 191.79, color: 'black' },
+            { time: "2019-04-18", value: 192.19, color: 'black' },
+            { time: "2019-04-22", value: 192.37, color: 'black' },
+            { time: "2019-04-23", value: 193.64, color: 'black' },
+            { time: "2019-04-24", value: 194.19, color: 'black' },
+            { time: "2019-04-25", value: 194.07, color: 'black' },
+            { time: "2019-04-26", value: 193.80, color: 'black' },
+            { time: "2019-04-29", value: 194.26, color: 'black' },
+            { time: "2019-04-30", value: 194.98, color: 'black' },
+            { time: "2019-05-01", value: 195.88, color: 'black' },
+            { time: "2019-05-02", value: 196.28, color: 'black' },
+            { time: "2019-05-03", value: 196.61, color: 'black' },
+            { time: "2019-05-06", value: 197.34, color: 'black' },
+            { time: "2019-05-07", value: 196.08, color: 'black' },
+            { time: "2019-05-08", value: 195.04, color: 'black' },
+            { time: "2019-05-09", value: 194.88, color: 'black' },
+            { time: "2019-05-10", value: 194.84, color: 'black' },
+            { time: "2019-05-13", value: 193.64, color: 'black' },
+            { time: "2019-05-14", value: 193.61, color: 'black' },
+            { time: "2019-05-15", value: 193.81, color: 'black' },
+            { time: "2019-05-16", value: 194.74, color: 'black' },
+            { time: "2019-05-17", value: 194.91, color: 'black' }
+          ];
+      }
       // Generate sample data to use within a candlestick series
       const candleStickData = generateCandlestickData();
+      // Generate sample data to use within a candlestick series
+      const smaLineData = generateSMA3Data();      
 
       // Create the Lightweight Chart within the container element defined in the HTML Body
       const chart = LightweightCharts.createChart(
           document.getElementById('container')
       );   
 
-      // Create the Main Series for our Candlesticks data
+   
+      // Create the Main Series for our line chart
       const mainSeries = chart.addSeries(LightweightCharts.CandlestickSeries);
-
       // Set the data for the Main Series
       mainSeries.setData(candleStickData);      
+
+
+      // Create the Main Series for our Candlesticks data
+      const sma3Series = chart.addSeries(LightweightCharts.LineSeries); 
+      // Set the data for the SMA Series
+      sma3Series.setData(smaLineData);          
 
       // Adding a window resize event handler to resize the chart when the window size changes.
       window.addEventListener('resize', () => {

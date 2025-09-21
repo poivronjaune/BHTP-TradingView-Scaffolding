@@ -42,8 +42,8 @@ Hope this makes sense for everyone.
 | # | File | Description |
 |---|---|---|
 | 1 | chart01.html | The most basic example full width using hard coded price data and all the default values such as white background, green and red candles, time frame at the bottom and price scale on the right |
-| 2 | chart02.html | insert details here |
-| 3 | chart03.html | insert details here |
+| 2 | chart02.html | Simple line chart that represents an Simple Moving Average. SMA Data is hard coded for simplicity, but should be calculated in real charts |
+| 3 | chart03.html | Chart with multiple data (candlestick and SMA). Also custom color for line chart |
 
 ## Recipee for simple chart
 1) HTML ***Container*** for chart to be displayed
