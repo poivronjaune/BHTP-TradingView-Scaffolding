@@ -1,5 +1,5 @@
 # BHTP-TradingView-Scaffolding
-Example HTML File with Javascriprt integration of TradingView's LightWeight Charts for non Technical Hobbyists learning to code through trading examples.  
+Example HTML Files with Javascriprt integration of TradingView's LightWeight Charts for non Technical Hobbyists learning to code through trading examples.  
 *This is mostly a reference project for myself, so I don't have to go through all the documentation process in the futur.*
 
 # Installation
@@ -44,3 +44,39 @@ Hope this makes sense for everyone.
 | 1 | chart01.html | The most basic example full width using hard coded price data and all the default values such as white background, green and red candles, time frame at the bottom and price scale on the right |
 | 2 | chart02.html | insert details here |
 | 3 | chart03.html | insert details here |
+
+## Recipee for simple chart
+1) HTML ***Container*** for chart to be displayed
+2) Instantiate a ***chart*** object
+3) Add a ***series*** to the chart
+4) Create or load some ***Data*** with appropriate structure for the series added
+5) use the seriesVar.setData( loadedData )
+6) Add a window resize event handler to refresh the chart when necessary
+
+ { time, open, high, low, close, customValue, color }
+
+ ## Series Data format
+ | Serie Type | SeriesDataType | List of { key:value ) pairs |
+|---|---|---|
+| CandlestickSeries | CandlestickData | { time, open, high, low, close, customValue?, color?, borderColor?, wickColor? } |
+| BarSeries | BarData | { time, open, high, low, close, color?, customValue? } |
+| LineSeries | LineData | { time, value, color?, customValue? } |
+| AreaSeries | AreaData | { time, value, lineColor?, topColor?, bottomColor?, customValue? } |
+| HistogramSeries | HistogramData | { time, value, color?, customValue? } |
+| . | . | . |
+
+
+> *keys with a "?" are optional data fields.*
+
+
+## List of Data Example
+```
+candles = [
+  { time: "2018-10-19", open: 180.34, high: 180.99, low: 178.57, close:  179.85 },
+  { time: "2018-10-22", open: 180.82, high: 181.41, low: 177.56, close:  178.75 },
+  { time: "2018-10-23", open: 175.77, high: 179.49, low: 175.44, close:  178.53 },
+  { time: "2018-10-24", open: 178.58, high: 182.37, low: 176.31, close:  176.97 },
+  { time: "2018-10-25", open: 177.52, high: 180.51, low: 176.83, close:  179.07 },
+]
+```
+
