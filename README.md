@@ -1,6 +1,6 @@
 # BHTP-TradingView-Scaffolding
 Example HTML Files with Javascriprt integration of TradingView's LightWeight Charts for non Technical Hobbyists learning to code through trading examples.  
-*This is mostly a reference project for myself, so I don't have to go through all the documentation process in the futur.*
+*This is mostly a reference project for myself, so I don't have to go through all the documentation research process in the futur.*
 
 # Installation
 ```
@@ -80,3 +80,26 @@ candles = [
 ]
 ```
 
+# NODE JS Installation
+Even if the library is considered to be a client side application, the files can be installed using a simple npm (Node Package Manager) command.  
+Go to [nodejs.org/en/download](https://nodejs.org/en/download) to get an installable version of node that will include NPM.  
+Get NPM version to test if it was installed properly
+```
+npm --version
+```
+Now install the nodejs version of the lightweigth charts
+```
+npm install --save lightweight-charts
+```
+This will create a folder "node_modules/lightweight-charts/dist"  
+This folder contains the distribution file for the library.  
+The "lightweight-charts.standalone.production.js" is the standalone version of the javascript file required to load locally.  
+It is not recommended to point directly to node_module folder from the front-end, so copy this file to a folder called libs in the root of your project.  
+That's it, load it in your HTML File using:
+```
+<!-- Adding the standalone version of Lightweight charts -->
+<script
+    type="text/javascript"
+    src="libs\lightweight-charts.standalone.production.js"
+></script>  
+```
