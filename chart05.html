@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0"
+    />
+    <title>Candlestick Chart</title>
+
+    <!-- Adding the standalone version of Lightweight charts -->
+    <script
+        type="text/javascript"
+        src="libs\lightweight-charts.standalone.production.js"
+    ></script>     
+    <style>
+      body {
+        background-color: #222;
+      }
+      /* Center the chart container horizontally and set dimensions */
+      #container {
+          width: 600px; /* Reduced width */
+          height: 400px; /* Reduced height */
+          margin: 0 auto; /* Center horizontally */
+      }      
+    </style>
+  </head>
+
+  <body>
+    <div id="container">
+      <!-- The chart will be rendered inside this container -->   
+    </div>
+
+
+    <!-- ###########################################  -->
+    <!-- JAVASCRIPT TO DOWNLOAD DATA AND ADD THE CHART  -->
+    <!-- ###########################################  -->    
+    <script>
+        // Larger Dataset
+        url = 'https://raw.githubusercontent.com/MapleFrogStudio/DATASETS/refs/heads/main/ADHOC/tsla_minute.csv'
+        // url = 'https://raw.githubusercontent.com/MapleFrogStudio/DATASETS/refs/heads/main/ADHOC/AAPL_1min.csv'
+
+        // 1) Fetch CSV file (Initiated in Main Flow further down the script)
+        async function handleFetchRequest(url_link) {
+            try {
+                const response = await fetch(url_link);     // Wait here until a response
+                if (!response.ok) {
+                    throw new Error(`${response.status}`);
+                }
+
+                const data = await response.text();         // Wait here the text is extracted from response object
+                console.log(data);                          // Data is ready here - use it safely
+                window.data = data;
+                return data
+            } catch (error) {
+                console.error('CSV Data Request Failed:', error);
+                return null;
+            }
+        }        
+
+        // 2) Parse CSV into candlestick data
+        async function formatCsvData(csvData) {
+            try {
+                if (!csvData || csvData.trim() === "") {
+                    throw new Error("CSV Data Is Empty");
+                }
+                console.log('CSV Data Loaded:');
+
+                // Check if more than 2 rows exist, throw error if no rows
+                const lines = csvData.trim().split('\n');
+                if (lines.length < 2) {
+                    throw new Error("CSV Data Bad Format");
+                }     
+                // Check headers in first row [0], throw error if no headers
+                let headers = lines[0].split(',');
+                if (headers.length < 5) {
+                    throw new Error("CSV Headers Missing");
+                } 
+
+                // Get column positions from headers
+                headers = headers.map(header => header.toLowerCase());
+                const dateIdx  = headers.findIndex(header => header === "date" || header === "datetime");
+                //const dateIdx = headers.indexOf("date");
+                const openIdx = headers.indexOf("open");
+                const highIdx = headers.indexOf("high");
+                const lowIdx = headers.indexOf("low");
+                const closeIdx = headers.indexOf("close");
+                
+                if (closeIdx === -1 || highIdx === -1 || lowIdx === -1 || openIdx === -1 || dateIdx === -1) {
+                    throw new Error("CSV Headers Incorrect");
+                }
+
+                const candleStickData = lines.slice(1).map((line, index) => {
+                    const values = line.split(',');
+                    if (values.length < 5) {
+                        throw new Error(`CSV Data Malformed - Row ${index + 1} : ${line}`);
+                    }                
+                    return {
+                        time: Math.floor(new Date(values[dateIdx]).getTime() / 1000),
+                        open: parseFloat(values[openIdx]),
+                        high: parseFloat(values[highIdx]),
+                        low: parseFloat(values[lowIdx]),
+                        close: parseFloat(values[closeIdx])
+                    };
+                });
+                
+                console.log('csvData Transformed to candleStickData');
+                console.log(candleStickData);
+                window.candleStickData = candleStickData;
+                return candleStickData;
+            } catch (error) {
+                console.error('CSV Data Processing Failed:', error);
+                return null;
+            }
+        }
+
+        // 3) Use the parsed data
+        async function createChart(candleStickData) {
+            console.log("First row:", candleStickData[0]);
+            console.log("Total rows:", candleStickData.length);
+            
+            // Create the Lightweight Chart within the container element defined in the HTML Body
+            let chart = LightweightCharts.createChart(document.getElementById('container'), {
+                width: container.clientWidth,
+                height: container.clientHeight,
+            });            
+
+            // Create the Main Series for our Candlesticks data
+            let mainSeries = await chart.addSeries(LightweightCharts.CandlestickSeries);
+
+            // Set the data for the Main Series
+            await mainSeries.setData(candleStickData);
+
+            window.addEventListener('resize', () => {
+                chart.resize(container.clientWidth, container.clientHeight);
+            });
+
+            return chart
+        }
+
+
+        // 4) Stylize the chart (time axis with date + time)
+        function stylizeChart(chart) {
+            chart.applyOptions({
+                layout: {
+                    background: { color: '#222' },
+                    textColor: '#DDD',
+                },
+                timeScale: {
+                    timeVisible: true,   // show time as well
+                    secondsVisible: true // show seconds too
+                },
+                grid: {
+                    vertLines: { color: '#444' },
+                    horzLines: { color: '#444' },
+                },
+            });
+        }        
+
+
+        // Main Flow
+        // IIFE (Immediately Invoked Function Expression) to run our code sequentially
+        (async () => {
+            const data = await handleFetchRequest(url);         // Wait here for fetch data
+            const candleStickData = await formatCsvData(data);  // Wait here for data processing
+            const chart = await createChart(candleStickData);                           // Use the final data
+            stylizeChart(chart);  // Apply styling to the chart
+
+            // Adding a window resize event handler to resize the chart when the window size changes.
+
+        })();
+    </script>
+
+
+  </body>
+</html>

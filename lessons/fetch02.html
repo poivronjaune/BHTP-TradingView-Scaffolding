@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Modern - Async</title>
+</head>
+<body>
+    <h1>Loading file from extrnal source...</h1>
+    <p>Check the browser console to access the data.</p>
+    <p>Use F12 or right click / inspect / console</p>
+
+    <script>
+        // Small Dataset
+        url = 'https://raw.githubusercontent.com/MapleFrogStudio/DATASETS/refs/heads/main/ADHOC/AAPL.csv'
+        // Larger Dataset
+        // url = 'https://raw.githubusercontent.com/MapleFrogStudio/DATASETS/refs/heads/main/ADHOC/AAPL_1min.csv'
+        // Bad seperator on line 3
+        //url = 'https://raw.githubusercontent.com/MapleFrogStudio/DATASETS/refs/heads/main/ADHOC/AAPL-Bad.csv'
+
+        // 1) Fetch CSV file (Initiated in Main Flow further down the script)
+        async function handleFetchRequest(url_link) {
+            try {
+                const response = await fetch(url_link);     // Wait here until a response
+                if (!response.ok) {
+                    throw new Error(`${response.status}`);
+                }
+
+                const data = await response.text();         // Wait here the text is extracted from response object
+                console.log(data);                          // Data is ready here - use it safely
+                return data
+            } catch (error) {
+                console.error('CSV Data Request Failed:', error);
+                return null;
+            }
+        }        
+
+        // 2) Parse CSV into candlestick data
+        async function formatCsvData(csvData) {
+            try {
+                if (!csvData || csvData.trim() === "") {
+                    throw new Error("CSV Data Is Empty");
+                }
+                console.log('CSV Data Loaded:');
+
+                // Check if more than 2 rows exist, throw error if no rows
+                const lines = csvData.trim().split('\n');
+                if (lines.length < 2) {
+                    throw new Error("CSV Data Bad Format");
+                }     
+                // Check headers in first row [0], throw error if no headers
+                const headers = lines[0].split(',');
+                if (headers.length < 5) {
+                    throw new Error("CSV Headers Missing");
+                } 
+
+                const candleStickData = lines.slice(1).map((line, index) => {
+                    const values = line.split(',');
+                    if (values.length < 5) {
+                        throw new Error(`CSV Data Malformed - Row ${index + 1} : ${line}`);
+                    }                
+                    return {
+                        time: values[0],
+                        open: parseFloat(values[1]),
+                        high: parseFloat(values[2]),
+                        low: parseFloat(values[3]),
+                        close: parseFloat(values[4])
+                    };
+                });
+                
+                console.log('csvData Transformed to candleStickData');
+                console.log(candleStickData);
+                return candleStickData;
+
+            } catch (error) {
+                console.error('CSV Data Processing Failed:', error);
+                return null;
+            }
+        }
+
+        // 3) Use the parsed data
+        async function useData(data) {
+            console.log("First row:", data[0]);
+            console.log("Total rows:", data.length);
+        }
+
+        // 4) NO Error Handler (already in async functions)
+
+        // Main Flow
+        // IIFE (Immediately Invoked Function Expression) to run our code sequentially
+        (async () => {
+            const data = await handleFetchRequest(url);         // Wait here for fetch data
+            const candleStickData = await formatCsvData(data);  // Wait here for data processing
+            useData(candleStickData);                           // Use the final data
+
+            // rest of the code for the page here
+        })();
+    </script>
+</body>
+</html>

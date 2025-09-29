@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Traditional - .then()</title>
+</head>
+<body>
+    <h1>Loading file from extrnal source...</h1>
+    <p>Check the browser console to access the data.</p>
+    <p>Use F12 or right click / inspect / console</p>
+
+    <script>
+        // Small Dataset
+        url = 'https://raw.githubusercontent.com/MapleFrogStudio/DATASETS/refs/heads/main/ADHOC/AAPL.csv'
+        // Larger Dataset
+        // url = 'https://raw.githubusercontent.com/MapleFrogStudio/DATASETS/refs/heads/main/ADHOC/AAPL_1min.csv'
+        // Bad seperator on line 3
+        // url = 'https://raw.githubusercontent.com/MapleFrogStudio/DATASETS/refs/heads/main/ADHOC/AAPL-Bad.csv'
+        
+        // 1) Fetch CSV file (initiated with fetch() further down the script)
+        function handleResponse(response) {
+            if (!response.ok) {
+                throw new Error('Data Request Failed');
+            }
+            return response.text();
+        }
+
+        // 2) Parse CSV into candlestick data
+        function formatCsvData(csvData) {
+            if (!csvData || csvData.trim() === "") {
+                throw new Error("CSV Data Is Empty");
+            }
+            
+            console.log(csvData)
+            console.log('CSV Data Loaded:');
+
+            
+            // Check if more than 2 rows exist, throw error if no rows
+            const lines = csvData.trim().split('\n');
+            if (lines.length < 2) {
+                throw new Error("CSV Data Bad Format");
+            }     
+            // Check headers in first row [0], throw error if no headers
+            const headers = lines[0].split(',');
+            if (headers.length < 5) {
+                throw new Error("CSV Headers Missing");
+            }            
+            
+            const candleStickData = lines.slice(1).map((line, index) => {
+                const values = line.split(',');
+                if (values.length < 5) {
+                    throw new Error(`CSV Data Malformed - Row ${index + 1} : ${line}`);
+                }                
+                return {
+                    time: values[0],
+                    open: parseFloat(values[1]),
+                    high: parseFloat(values[2]),
+                    low: parseFloat(values[3]),
+                    close: parseFloat(values[4])
+                };
+            });
+            
+            console.log('csvData Transformed to candleStickData');
+            console.log(candleStickData);
+            
+            return candleStickData;
+        }
+
+        // 3) Use the parsed data
+        function useData(data) {
+            console.log('First row:', data[0]);
+            console.log('Total rows:', data.length);
+            console.log('Insert Chart Display Code Here');
+            
+        }
+
+        // 4) Error Handler
+        function errorHandler(error) {
+            console.error('Error:', error.message);
+        }
+
+        // Main Flow
+        // Call each feature in sequence fro clean code and easy maintenance
+        fetch(url)
+            .then(handleResponse)
+            .then(formatCsvData)
+            .then(useData)
+            .catch(errorHandler)
+    </script>
+</body>
+</html>
