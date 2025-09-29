@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Load Local CSV (Hardcoded Filename)</title>
+</head>
+<body>
+    <!--
+        This file cannot be run directly in the Browser by opening the htnl directly 
+        It must be served by a local web server. Modern Browser prevent opening local files for security reasons.
+        Use a simple server from python: python -m http.server 8000
+        Use a simple server from nodejs: npx http-server -p 8000 (requires nodesjs and http-server to be installed)
+    -->
+    <h1>Loading CSV file from local disk...</h1>
+    <p>Check the browser console to access the data.</p>
+    <p>Use F12 or right click / inspect / console</p>
+
+    <script>
+        const localFile = "../data/AAPL_1min.csv";
+
+        async function loadLocalCsv(filename) {
+            try {
+                const response = await fetch(filename);
+                if (!response.ok) {
+                    throw new Error(`HTTP error: ${response.status}`);
+                }
+                const text = await response.text();
+                console.log("Raw CSV Data:");
+                console.log(text);
+
+                // Optional quick parse
+                const lines = text.trim().split("\n");
+                const headers = lines[0].split(",");
+                const rows = lines.slice(1).map(line => line.split(","));
+                console.log("Local file name: ",localFile)
+                console.log("Headers:", headers);
+                console.log("First Row:", rows[0]);
+                console.log("Total Rows:", rows.length);
+
+                return rows;
+            } catch (err) {
+                console.error("Error loading local CSV:", err);
+            }
+        }
+
+        // Run immediately
+        (async () => {
+            await loadLocalCsv(localFile);
+        })();
+    </script>
+</body>
+</html>
